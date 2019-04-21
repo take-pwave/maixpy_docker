@@ -1,6 +1,6 @@
 # Install MaixPy develop enviroment.(maixpy)
 #
-# VERSION 0.1
+# VERSION 0.3.0
 FROM ubuntu:16.04
 MAINTAINER Hiroshi TAKEMOTO <take.pwave@gmail.com>
 

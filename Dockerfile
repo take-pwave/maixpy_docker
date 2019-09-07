@@ -1,13 +1,19 @@
 # Install MaixPy develop enviroment.(maixpy)
 #
 # VERSION 0.3.0
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER Hiroshi TAKEMOTO <take.pwave@gmail.com>
 
 RUN apt-get update
 RUN apt-get install -y build-essential cmake wget sudo git
-RUN apt-get install -y python3
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN apt-get install -y python3.7 python3.7-distutils
+RUN ln -s /usr/bin/python3.7 /usr/bin/python
+RUN cd /tmp  \
+	&& wget --quiet  https://bootstrap.pypa.io/get-pip.py  \
+	&& python get-pip.py
+
+# install tensorflow and toco
+RUN pip3 install tensorflow toco pyserial==3.4
 
 # install tool-chain
 RUN cd /tmp \
@@ -28,9 +34,15 @@ RUN cd $HOME && mkdir workspace
 RUN cd $HOME \
 	&& git clone --recursive https://github.com/sipeed/MaixPy.git \
 	&& cd MaixPy \
-	&& make -C mpy-cross \
-	&& echo "toolchain_path=/opt/kendryte-toolchain" > ports/k210-freertos/config.conf \
-	&& cd ports/k210-freertos \
-	&& chmod +x build.sh; ./build.sh
+	&& pip3 install --user -r requirements.txt \
+	&& cd projects/maixpy_k210 \
+	&& python project.py build
+
+# install Maix_Toolbox
+RUN cd $HOME \
+	&& git clone https://github.com/sipeed/Maix_Toolbox.git
+COPY get_nncase-mod.sh /tmp/get_nncase-mod.sh
+RUN cd $HOME/Maix_Toolbox \
+	&& /bin/sh /tmp/get_nncase-mod.sh
 
 CMD ["/bin/bash"]

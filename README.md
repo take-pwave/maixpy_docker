@@ -36,8 +36,11 @@ kendryte-toolchainは、/optにインストールしてあります。
 - kendryte-toolchain-ubuntu-amd64-8.2.0-20190213.tar.gz
 
 
+### Maix_Toolboxの追加（2019/09/07追加）
+Ubuntu18.04に変更し、python3.7が使えるようにして、モデルコンバータ
+Maix_Toolboxをインストールしました。
 
-### 最新のMaixPyに更新する方法
+### 最新のMaixPyに更新する方法（2019/09/07更新）
 
 MaixPyのコンパイルには、大文字と小文字を区別するファイルシステムが必要なため、
 WindowsやMacOSXのディレクトリでは正常にビルドすることができません。
@@ -50,15 +53,17 @@ WindowsやMacOSXのディレクトリでは正常にビルドすることがで�
 $ cd ~/MaixPy
 $ git pull
 $ git submodule update --recursive
-$ cd ports/k210-freertos
-$ ./build.sh
-$ ls output/
-api.a      libkendryte.a  maixpy.elf     spiffs.a
-drivers.a  maixpy.bin     mpy_support.a  utils.a
-
+$ pip3 install --user -r requirements.txt
+$ cd projects/maixpy_k210
+$ python project.py build
+$ ls build/
+CMakeCache.txt  cmake_install.cmake  kendryte_sdk  maixpy.txt
+CMakeFiles      config               main          micropython
+Makefile        drivers              maixpy.bin    spiffs
+boards          exe_src.c            maixpy.elf    utils
 ```
 
-outputディレクトリのmaixpy.binを~/workspace/にコピーして、
+buildディレクトリのmaixpy.binを~/workspace/にコピーして、
 kflashコマンドを使ってMAiXに書き込んでください。
 
 
